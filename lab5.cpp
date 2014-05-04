@@ -86,41 +86,6 @@ void changeViewport(int w, int h){
 	glViewport(0, 0, w, h);
 }
 
-void checkGoal(){
-
-	if(puckFB<-1.8f){
-
-		if(puckLR < -0.25 || puckLR > (0.25-0.1)){
-			
-			speed = 0.01f;
-			if(score>highScore)
-				highScore = score;
-			score = 0;
-
-			printf("\nNO GOAL!\n\nGame over.....\n\n");
-			printf("Your high score is: %d\n", highScore);
-			speed = startSpeed;
-			printf("\nRestarting the game... Good luck!\n");
-
-		}
-		else{
-			printf("\nGOAL!! Score: %d vs. %d, Time to speed up the puck!!\n",score+1, highScore);
-			speed += 0.001f;
-			score++;
-		
-		}
-
-		//reset everything
-		puckLR = -1.0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(2.0)));
-		puckFB = 2.0f;
-		depth = -2.0f;
-		start = 0;
-
-	}
-
-}
-
-
 void AdjustVertexData(float x, float z)//WTF this do?
 {
     std::vector<float> fNewData(ARRAY_COUNT(vertices));
@@ -145,14 +110,6 @@ void AdjustVertexData(float x, float z)//WTF this do?
 void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-
-	if(start){
-		depth  += speed/2.0;
-		puckFB -= speed;		
-		checkGoal();
-	}
-
-	AdjustVertexData(puckLR, puckFB);
 
 	glUseProgram(shaderProgramID);
 
@@ -233,36 +190,9 @@ void keyboard( unsigned char key, int x, int y ){
 
 }
 
-
-void SpecialInput(int key, int x, int y)
-{
-	switch(key){
-		case GLUT_KEY_UP:
-			start = 1;
-			break;
-		case GLUT_KEY_LEFT:
-			if(start)
-				puckLR -= 0.05;
-			break;
-		case GLUT_KEY_RIGHT:
-			if(start)
-				puckLR += 0.05;
-			break;
-	}
-	
-	glutPostRedisplay();
-
-}
-
 void printWelcome(){
 
-	printf("Welcome to hot shot!\n");
-	printf("You want to get as many goals as possible\n");
-	printf("Each time you get a goal, the shots get faster!\n");
-	printf("Your score is the number of goals you get\n");
-	printf("Hit the up arrow to shoot the puck\n");
-	printf("Tap the left and right arrows to move the puck into the goal after you shoot\n");
-	printf("-You must get inside the goal for it to count! If you hit the sides it counts as a miss and is game over!-\n");
+	printf("Welcome\n");
 	
 	printf("*Manipulating the models*\n");
 	printf("a,d,w,s move the camera\n");
@@ -271,8 +201,6 @@ void printWelcome(){
 	printf("e,q zooms in/out\n");
 	printf("z,x moves you toward/away from the goal\n");
 	printf("escape quits\n");
-	printf("Good luck!!\n");
-	printf("Starting in 3.... 2.... 1....\n");
 	sleep(1);
 
 }
@@ -361,7 +289,7 @@ int main (int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
 	glutInitWindowSize(800, 600);
-	glutCreateWindow("Project 2: hot shot!");
+	glutCreateWindow("Lab5: texturing");
 	glutReshapeFunc(changeViewport);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glutDisplayFunc(render);
@@ -369,15 +297,12 @@ int main (int argc, char** argv) {
 
 	/*set up the matricies*/
 	initMatrices(); 
-
 	initShaders();//
 	
 	glutKeyboardFunc(keyboard);
 
 	glEnableVertexAttribArray(positionID);
 	glEnableVertexAttribArray(colorID);
-	glutSpecialFunc(SpecialInput);
-
 
 	printWelcome();
 
