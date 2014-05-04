@@ -43,8 +43,8 @@ bool compiledStatus(GLint shaderID){
 
 GLuint createShaders(){
 
-	char* vertexShaderSourceCode = readFile("vertexShader.vsh");
 	char* fragmentShaderSourceCode = readFile("fragmentShader.fsh");
+	char* vertexShaderSourceCode = readFile("vertexShader.vsh");
 
 	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShaderID, 1, (const GLchar**)&vertexShaderSourceCode, NULL);
@@ -64,19 +64,10 @@ GLuint createShaders(){
 
 
 	GLuint shaderID = glCreateProgram();
+	//glBindFragDataLocation(shaderID, 0, "outColor");//**http://open.gl/content/code/c3_multitexture.txt**/
 	glAttachShader(shaderID, vertexShaderID);
 	glAttachShader(shaderID, fragmentShaderID);
 	glLinkProgram(shaderID);
 
-	return shaderID;
-}
-
-
-
-GLuint makeShaderProgram (GLuint vertexShaderID, GLuint fragmentShaderID) {
-	GLuint shaderID = glCreateProgram();
-	glAttachShader(shaderID, vertexShaderID);
-	glAttachShader(shaderID, fragmentShaderID);
-	glLinkProgram(shaderID);
 	return shaderID;
 }

@@ -3,13 +3,12 @@
 // This is the same old fragment shader we've been using
 
 in vec4 color;
+in vec2 texCoord;
 out vec4 fColor;
 
+uniform sampler2D texRink;
+
 void main () {
+	fColor = color*texture(texRink, texCoord);//uncomment is death
 	//fColor = color;
-	//fColor = vec4 (1.0,0.0,0.0,1.0);
-	fColor.r=color.r;
-	fColor.g=color.g;
-	fColor.b=color.b;
-	fColor.a=1.0;
 }
